@@ -1,9 +1,9 @@
 document.getElementById('cashout-btn')
     .addEventListener('click', function () {
         // 1. get the agent number and validate 
-        const cashoutNumberInput = getValeFromInput('cashout-number');
-        console.log(cashoutNumberInput);
-        if (cashoutNumberInput.length !== 11 || cashoutNumberInput[0] !== '0') {
+        const cashoutNumber= getValeFromInput('cashout-number');
+        console.log(cashoutNumber);
+        if (cashoutNumber.length !== 11 || cashoutNumber[0] !== '0') {
             alert('Invalid Agent Number');
             return;
         }
@@ -15,13 +15,14 @@ document.getElementById('cashout-btn')
             return;
         }
 
-        //  3. get the current Balance and validate ,convert to number
-        const balanceElement = document.getElementById('balance');
-        const balance = balanceElement.innerText;
-        console.log(balance);
+        // //  3. get the current Balance and validate ,convert to number
+        // const balanceElement = document.getElementById('balance');
+        // const balance = balanceElement.innerText;
+        // console.log(balance);
+        const currentBalance = getBalance();
 
         // 4. calculate new Balance
-        const newBalance = Number(balance) - Number(cashoutAmount);
+        const newBalance = currentBalance - Number(cashoutAmount);
         console.log(newBalance);
         if (newBalance < 0) {
             alert('Insufficient Balance');
@@ -32,7 +33,22 @@ document.getElementById('cashout-btn')
         if (Pin === '1234') {
             // 6. true :: show an alert > set Balance to new Balance
             alert('Cashout Successful');
-            balanceElement.innerText = newBalance;
+            setBalance(newBalance);
+
+            // 1. history-container ke shore niye ashbo
+            const history = document.getElementById('history-content');
+            // 2. nwe div create korbo
+            const newHistory = document.createElement('div');
+            // 3. new div er innerHtml add korbo
+            newHistory.innerHTML = `
+                  <div class="transection-card p-5 bg-base-100">
+                    CashOut ${cashoutAmount} TAKA successful from ${cashoutNumber},at ${new Date().toLocaleTimeString()}
+            </div>
+            
+            `;
+            // 4. history container e newDiv append korbo
+            history.appendChild(newHistory);
+
         } else {
             alert('Invalid PIN');
         }
